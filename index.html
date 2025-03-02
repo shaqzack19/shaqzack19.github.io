@@ -158,19 +158,23 @@
         });
     }
 
-    function playSong(index) {
-        if (songs.length === 0) return;
+function playSong(index) {
+    if (songs.length === 0) return;
 
-        currentIndex = index;
-        audioSource.src = songs[currentIndex].path;
-        audioPlayer.load();
+    currentIndex = index;
+    audioSource.src = songs[currentIndex].path;
+    audioPlayer.load();
 
+    // Ensure the audio player is fully loaded before playing
+    audioPlayer.oncanplaythrough = () => {
         if (userInteracted) {
             audioPlayer.play().catch(error => console.log("Autoplay prevented, waiting for user interaction."));
         }
+    };
 
-        nowPlayingText.textContent = `Now Playing: ${songs[currentIndex].name}`;
-    }
+    nowPlayingText.textContent = `Now Playing: ${songs[currentIndex].name}`;
+}
+
 
     // Play button to enable user interaction
     playButton.addEventListener('click', () => {
