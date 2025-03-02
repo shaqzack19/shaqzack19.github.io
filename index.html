@@ -132,7 +132,7 @@
     const nowPlayingText = document.getElementById('now-playing');
     const searchBar = document.getElementById('search-bar');
 
-    fetch('songs.json')
+    fetch('SongNames.json')
         .then(response => response.json())
         .then(data => {
             songs = data;
