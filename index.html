@@ -118,10 +118,10 @@
     </div>
 
 <script>
+  
     let songs = [];
     let currentIndex = 0;
     let isShuffle = false;
-    let userInteracted = false;
 
     const audioPlayer = document.getElementById('audio-player');
     const audioSource = document.getElementById('audio-source');
@@ -131,14 +131,13 @@
     const nextSongBtn = document.getElementById('next-song');
     const nowPlayingText = document.getElementById('now-playing');
     const searchBar = document.getElementById('search-bar');
-    const playButton = document.getElementById('play-button');
 
-    // Load songs from JSON
     fetch('SongNames.json')
         .then(response => response.json())
         .then(data => {
             songs = data;
             renderSongList(songs);
+            playSong(0);
         })
         .catch(error => console.error('Error loading SongNames.json:', error));
 
@@ -150,37 +149,22 @@
             songItem.textContent = song.name;
 
             songItem.addEventListener('click', () => {
-                userInteracted = true; // Mark user interaction
-                playSong(songs.indexOf(song));
+                playSong(songs.indexOf(song)); // Ensure correct index
             });
 
             songsList.appendChild(songItem);
         });
     }
 
-function playSong(index) {
-    if (songs.length === 0) return;
+    function playSong(index) {
+        if (songs.length === 0) return;
 
-    currentIndex = index;
-    audioSource.src = songs[currentIndex].path;
-    audioPlayer.load();
-
-    // Ensure the audio player is fully loaded before playing
-    audioPlayer.oncanplaythrough = () => {
-        if (userInteracted) {
-            audioPlayer.play().catch(error => console.log("Autoplay prevented, waiting for user interaction."));
-        }
-    };
-
-    nowPlayingText.textContent = `Now Playing: ${songs[currentIndex].name}`;
-}
-
-
-    // Play button to enable user interaction
-    playButton.addEventListener('click', () => {
-        userInteracted = true; // Mark interaction
+        currentIndex = index;
+        audioSource.src = songs[currentIndex].path;
+        audioPlayer.load();
         audioPlayer.play();
-    });
+        nowPlayingText.textContent = `Now Playing: ${songs[currentIndex].name}`;
+    }
 
     toggleModeBtn.addEventListener('click', () => {
         isShuffle = !isShuffle;
@@ -188,7 +172,6 @@ function playSong(index) {
     });
 
     nextSongBtn.addEventListener('click', () => {
-        userInteracted = true;
         if (isShuffle) {
             playSong(Math.floor(Math.random() * songs.length));
         } else {
@@ -197,7 +180,6 @@ function playSong(index) {
     });
 
     prevSongBtn.addEventListener('click', () => {
-        userInteracted = true;
         if (isShuffle) {
             playSong(Math.floor(Math.random() * songs.length));
         } else {
@@ -218,6 +200,8 @@ function playSong(index) {
         const filteredSongs = songs.filter(song => song.name.toLowerCase().includes(searchText));
         renderSongList(filteredSongs);
     });
+
+
 
 </script>
 </body>
