@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Beach Music Player</title>
+    <title>My Ocean Music Player</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -94,7 +94,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Beach Music Player</h1>
+        <h1>My Ocean Music Player</h1>
 
         <p id="now-playing">Now Playing: None</p>
 
@@ -184,21 +184,6 @@
             playSong((currentIndex - 1 + songs.length) % songs.length);
         }
     });
-
-    audioPlayer.addEventListener('ended', () => {
-        if (isShuffle) {
-            playSong(Math.floor(Math.random() * songs.length));
-        } else {
-            playSong((currentIndex + 1) % songs.length);
-        }
-    });
-
-    searchBar.addEventListener('input', (e) => {
-        const searchText = e.target.value.toLowerCase();
-        const filteredSongs = songs.filter(song => song.name.toLowerCase().includes(searchText));
-        renderSongList(filteredSongs);
-    });
-
 </script>
 </body>
 </html>
