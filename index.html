@@ -132,14 +132,14 @@
     const nowPlayingText = document.getElementById('now-playing');
     const searchBar = document.getElementById('search-bar');
 
-    fetch('SongNames.json')
+    fetch('songs.json')
         .then(response => response.json())
         .then(data => {
             songs = data;
             renderSongList(songs);
             playSong(0);
         })
-        .catch(error => console.error('Error loading SongNames.json:', error));
+        .catch(error => console.error('Error loading Songs.json:', error));
 
     function renderSongList(filteredSongs) {
         songsList.innerHTML = '';
