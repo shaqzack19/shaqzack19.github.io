@@ -27,13 +27,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
+            color: white; /* Changed to white */
             font-family: 'Comic Sans MS', sans-serif;
             font-size: 5vw;
             font-weight: bold;
             text-align: center;
             cursor: pointer;
-            flex-direction: column;
         }
         .container {
             text-align: center;
@@ -46,28 +45,12 @@
             max-width: 600px;
             display: none; /* Hidden at first */
         }
-        h1 {
-            font-family: 'Comic Sans MS', sans-serif;
-            font-size: 3em;
-            margin-bottom: 20px;
-            color: #f8d210;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-        #search-bar {
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            margin-bottom: 10px;
-            font-size: 16px;
-            text-align: center;
-        }
         .bottom-left {
             position: absolute;
             bottom: 20px;
             left: 20px;
             font-size: 14px;
-            color: white;
+            color: white; /* Changed to white */
             cursor: pointer;
         }
     </style>
@@ -75,8 +58,8 @@
 <body>
 
     <div class="prank-screen" id="prank-screen">
-        <div id="prank-text"></div>
-        <div class="bottom-left">Click here to go back</div>
+        <div id="prank-text">GET BACK TO YOUR VREQS</div>
+        <div class="bottom-left" id="switch-to-music">Click here to go back</div>
     </div>
 
     <div class="container" id="music-container">
@@ -89,18 +72,25 @@
             Your browser does not support the audio element.
         </audio>
 
-        <input type="text" id="search-bar" placeholder="Search for a song...">
+        <div class="bottom-left" id="switch-to-prank">Click here for a surprise</div>
     </div>
 
 <script>
-    // Randomly choose the prank text
-    const prankMessages = ["GET BACK TO YOUR VREQS", "HOP ON TEAM CENTER"];
-    document.getElementById("prank-text").textContent = prankMessages[Math.floor(Math.random() * prankMessages.length)];
+    const prankScreen = document.getElementById('prank-screen');
+    const musicContainer = document.getElementById('music-container');
+    const switchToMusic = document.getElementById('switch-to-music');
+    const switchToPrank = document.getElementById('switch-to-prank');
 
     // Handle prank screen click
-    document.getElementById('prank-screen').addEventListener('click', () => {
-        document.getElementById('prank-screen').style.display = 'none';
-        document.getElementById('music-container').style.display = 'block';
+    switchToMusic.addEventListener('click', () => {
+        prankScreen.style.display = 'none';
+        musicContainer.style.display = 'block';
+    });
+
+    // Handle music screen click
+    switchToPrank.addEventListener('click', () => {
+        prankScreen.style.display = 'flex';
+        musicContainer.style.display = 'none';
     });
 </script>
 
