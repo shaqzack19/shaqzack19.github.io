@@ -17,23 +17,6 @@
             color: #fff;
             overflow: hidden;
         }
-        .prank-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-family: 'Comic Sans MS', sans-serif;
-            font-size: 5vw;
-            font-weight: bold;
-            text-align: center;
-            cursor: pointer;
-        }
         .container {
             text-align: center;
             background: rgba(0, 0, 0, 0.5);
@@ -43,7 +26,6 @@
             backdrop-filter: blur(5px);
             width: 100%;
             max-width: 600px;
-            display: none; /* Hidden at first */
         }
         h1 {
             font-family: 'Comic Sans MS', sans-serif;
@@ -108,23 +90,10 @@
             margin-top: 10px;
             font-weight: bold;
         }
-        .bottom-left {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            font-size: 14px;
-            color: red;
-        }
     </style>
 </head>
 <body>
-
-    <div class="prank-screen" id="prank-screen">
-        GET BACK TO YOUR VREQS
-        <div class="bottom-left">Click here to go back</div>
-    </div>
-
-    <div class="container" id="music-container">
+    <div class="container">
         <h1>Ocean Music Player</h1>
 
         <p id="now-playing">Now Playing: None</p>
@@ -149,12 +118,7 @@
     </div>
 
 <script>
-    // Handle prank screen click
-    document.getElementById('prank-screen').addEventListener('click', () => {
-        document.getElementById('prank-screen').style.display = 'none';
-        document.getElementById('music-container').style.display = 'block';
-    });
-
+  
     let songs = [];
     let currentIndex = 0;
     let isShuffle = false;
@@ -199,12 +163,12 @@
         audioSource.src = songs[currentIndex].path;
         audioPlayer.load();
         audioPlayer.play();
-        nowPlayingText.textContent = `Now Playing: ${songs[currentIndex].name}`;
+        nowPlayingText.textContent = Now Playing: ${songs[currentIndex].name};
     }
 
     toggleModeBtn.addEventListener('click', () => {
         isShuffle = !isShuffle;
-        toggleModeBtn.textContent = `Shuffle Mode: ${isShuffle ? "ON" : "OFF"}`;
+        toggleModeBtn.textContent = Shuffle Mode: ${isShuffle ? "ON" : "OFF"};
     });
 
     nextSongBtn.addEventListener('click', () => {
@@ -236,7 +200,9 @@
         const filteredSongs = songs.filter(song => song.name.toLowerCase().includes(searchText));
         renderSongList(filteredSongs);
     });
-</script>
 
+
+
+</script>
 </body>
 </html>
