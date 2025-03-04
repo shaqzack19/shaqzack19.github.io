@@ -163,12 +163,12 @@
         audioSource.src = songs[currentIndex].path;
         audioPlayer.load();
         audioPlayer.play();
-        nowPlayingText.textContent = Now Playing: ${songs[currentIndex].name};
+        nowPlayingText.textContent = `Now Playing: ${songs[currentIndex].name}`;
     }
 
     toggleModeBtn.addEventListener('click', () => {
         isShuffle = !isShuffle;
-        toggleModeBtn.textContent = Shuffle Mode: ${isShuffle ? "ON" : "OFF"};
+        toggleModeBtn.textContent = `Shuffle Mode: ${isShuffle ? "ON" : "OFF"}`;
     });
 
     nextSongBtn.addEventListener('click', () => {
