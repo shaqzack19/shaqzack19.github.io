@@ -27,7 +27,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white; /* Changed to white */
+            color: white;
             font-family: 'Comic Sans MS', sans-serif;
             font-size: 5vw;
             font-weight: bold;
@@ -45,21 +45,83 @@
             max-width: 600px;
             display: none; /* Hidden at first */
         }
+        h1 {
+            font-family: 'Comic Sans MS', sans-serif;
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #f8d210;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        #search-bar {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            margin-bottom: 10px;
+            font-size: 16px;
+            text-align: center;
+        }
+        .song-list-container {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        .song-item {
+            margin: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .song-item:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        audio {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 350px;
+            border-radius: 10px;
+            padding: 5px;
+        }
+        .control-btn {
+            background: #ffbc42;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .control-btn:hover {
+            background: #f8d210;
+        }
+        #now-playing {
+            font-size: 1.2em;
+            margin-top: 10px;
+            font-weight: bold;
+        }
         .bottom-left {
             position: absolute;
             bottom: 20px;
             left: 20px;
             font-size: 14px;
-            color: white; /* Changed to white */
-            cursor: pointer;
+            color: red;
         }
     </style>
 </head>
 <body>
 
     <div class="prank-screen" id="prank-screen">
-        <div id="prank-text">GET BACK TO YOUR VREQS</div>
-        <div class="bottom-left" id="switch-to-music">Click here to go back</div>
+        GET BACK TO YOUR VREQS
+        <div class="bottom-left">Click here to go back</div>
     </div>
 
     <div class="container" id="music-container">
@@ -72,25 +134,107 @@
             Your browser does not support the audio element.
         </audio>
 
-        <div class="bottom-left" id="switch-to-prank">Click here for a surprise</div>
+        <div>
+            <button id="play-button" class="control-btn">▶ Play</button>
+            <button id="prev-song" class="control-btn">⏮ Previous</button>
+            <button id="toggle-mode" class="control-btn">Shuffle Mode: OFF</button>
+            <button id="next-song" class="control-btn">⏭ Next</button>
+        </div>
+
+        <input type="text" id="search-bar" placeholder="Search for a song...">
+
+        <div class="song-list-container">
+            <ul id="songs-list" class="song-list"></ul>
+        </div>
     </div>
 
 <script>
-    const prankScreen = document.getElementById('prank-screen');
-    const musicContainer = document.getElementById('music-container');
-    const switchToMusic = document.getElementById('switch-to-music');
-    const switchToPrank = document.getElementById('switch-to-prank');
-
     // Handle prank screen click
-    switchToMusic.addEventListener('click', () => {
-        prankScreen.style.display = 'none';
-        musicContainer.style.display = 'block';
+    document.getElementById('prank-screen').addEventListener('click', () => {
+        document.getElementById('prank-screen').style.display = 'none';
+        document.getElementById('music-container').style.display = 'block';
     });
 
-    // Handle music screen click
-    switchToPrank.addEventListener('click', () => {
-        prankScreen.style.display = 'flex';
-        musicContainer.style.display = 'none';
+    let songs = [];
+    let currentIndex = 0;
+    let isShuffle = false;
+
+    const audioPlayer = document.getElementById('audio-player');
+    const audioSource = document.getElementById('audio-source');
+    const songsList = document.getElementById('songs-list');
+    const toggleModeBtn = document.getElementById('toggle-mode');
+    const prevSongBtn = document.getElementById('prev-song');
+    const nextSongBtn = document.getElementById('next-song');
+    const nowPlayingText = document.getElementById('now-playing');
+    const searchBar = document.getElementById('search-bar');
+
+    fetch('SongNames.json')
+        .then(response => response.json())
+        .then(data => {
+            songs = data;
+            renderSongList(songs);
+            playSong(0);
+        })
+        .catch(error => console.error('Error loading SongNames.json:', error));
+
+    function renderSongList(filteredSongs) {
+        songsList.innerHTML = '';
+        filteredSongs.forEach((song, index) => {
+            const songItem = document.createElement('li');
+            songItem.classList.add('song-item');
+            songItem.textContent = song.name;
+
+            songItem.addEventListener('click', () => {
+                playSong(songs.indexOf(song)); // Ensure correct index
+            });
+
+            songsList.appendChild(songItem);
+        });
+    }
+
+    function playSong(index) {
+        if (songs.length === 0) return;
+
+        currentIndex = index;
+        audioSource.src = songs[currentIndex].path;
+        audioPlayer.load();
+        audioPlayer.play();
+        nowPlayingText.textContent = `Now Playing: ${songs[currentIndex].name}`;
+    }
+
+    toggleModeBtn.addEventListener('click', () => {
+        isShuffle = !isShuffle;
+        toggleModeBtn.textContent = `Shuffle Mode: ${isShuffle ? "ON" : "OFF"}`;
+    });
+
+    nextSongBtn.addEventListener('click', () => {
+        if (isShuffle) {
+            playSong(Math.floor(Math.random() * songs.length));
+        } else {
+            playSong((currentIndex + 1) % songs.length);
+        }
+    });
+
+    prevSongBtn.addEventListener('click', () => {
+        if (isShuffle) {
+            playSong(Math.floor(Math.random() * songs.length));
+        } else {
+            playSong((currentIndex - 1 + songs.length) % songs.length);
+        }
+    });
+
+    audioPlayer.addEventListener('ended', () => {
+        if (isShuffle) {
+            playSong(Math.floor(Math.random() * songs.length));
+        } else {
+            playSong((currentIndex + 1) % songs.length);
+        }
+    });
+
+    searchBar.addEventListener('input', (e) => {
+        const searchText = e.target.value.toLowerCase();
+        const filteredSongs = songs.filter(song => song.name.toLowerCase().includes(searchText));
+        renderSongList(filteredSongs);
     });
 </script>
 
